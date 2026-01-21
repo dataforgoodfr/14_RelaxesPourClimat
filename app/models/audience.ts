@@ -21,8 +21,8 @@ export default class Audience extends BaseModel {
   declare date_de_l_audience?: DateTime
 
   @belongsTo(() => Ville, {
-    foreignKey: 'nom',
-    localKey: 'ville_de_l_audience',
+    foreignKey: 'ville_de_l_audience',
+    localKey: 'nom',
   })
   declare ville: BelongsTo<typeof Ville>
 
