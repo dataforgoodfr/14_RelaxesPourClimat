@@ -3,18 +3,35 @@
   flex-direction: row;
 }
 
-.timeline-node::after {
-  content: "";
-  float: inline-start;
-  width: 20px;
-  height: 20px;
-  border-color: blue;
-  border-style: solid;
-  margin-left: 10px;
-  margin-right: 10px;
-  border-radius: 10px;
+.timeline > a > .timeline-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
-.timeline-node.current::after {
+.timeline > a > .timeline-node > .timeline-pin {
+  width: 20px;
+  height: 20px;
+  background-color: white;
+  border-color: black;
+  border-style: solid;
+  border-radius: 10px;
+  border-width: 2px;
+  z-index: 2;
+}
+
+.timeline > a > .timeline-node > .timeline-link {
+  position: relative;
+  width: calc(100% + 20px);
+  height: 1px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: black;
+  top: 11px;
+}
+
+.timeline > a > .timeline-node > .timeline-pin.current {
   background-color: aqua;
 }
