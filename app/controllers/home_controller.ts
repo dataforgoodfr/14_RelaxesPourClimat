@@ -10,7 +10,17 @@ export default class HomeController {
     const searchQuery = await await request.validateUsing(searchQueryValidator)
 
     const query = db
-      .from('audiences')
+      .query()
+      .with('timeline', (q) => {
+        q.from('audiences')
+          .select(
+            'nom_de_la_procedure as name',
+            db.raw(
+              "array_agg(json_object('{id,date}', ARRAY[id::text, date_de_l_audience::text])) as audiences"
+            )
+          )
+          .groupBy('nom_de_la_procedure')
+      })
       .select(
         'audiences.*',
         'procedures.description',
@@ -18,19 +28,9 @@ export default class HomeController {
         'procedures.collectif_d_action_ou_lutte',
         'timeline.audiences as timeline'
       )
+      .from('audiences')
       .join('procedures', 'audiences.nom_de_la_procedure', 'procedures.nom')
-      .joinRaw(
-        `
-JOIN (
-    select
-      nom_de_la_procedure name, 
-      array_agg(json_object('{id,date}', ARRAY[id::text, date_de_l_audience::text])) audiences 
-    from audiences
-    group by nom_de_la_procedure
-  ) as timeline
-ON timeline.name = audiences.nom_de_la_procedure
-        `
-      )
+      .join('timeline', 'timeline.name', 'audiences.nom_de_la_procedure')
       .where('audiences.publiee', true)
       .andWhere('procedures.publiee', true)
 
